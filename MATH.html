@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Arithmetic Flash Cards Quiz</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background: #7393B3;
+      background-size: cover;
+      margin: 0;
+      color: white;
+      font-family: sans-serif;
+    }
+
+    .quiz-container {
+      max-width: 500px;
+      margin: 30px auto;
+      padding: 1.5rem;
+      background-color: #000000;
+      border-radius: 20px;
+      box-shadow: 0px 4px 12px rgba(0,0,0,0.3);
+      text-align: center;
+    }
+
+    h1, h2, h3 {
+      font-weight: bold;
+      margin-bottom: 1rem;
+    }
+
+    h2 { font-size: 1.9rem; }
+    h3 { font-size: 1.2rem; }
+
+    .question {
+      font-size: 2.5rem;
+      margin: 1.2rem 0;
+    }
+
+    #answer {
+      font-size: 1.2rem;
+      padding: 10px;
+      border-radius: 8px;
+      border: 2px solid #0d6efd;
+      width: 100%;
+      background-color: #fff;
+      color: #000;
+      text-align: center;
+    }
+
+    .btn {
+      margin: 4px;
+      padding: 4px 10px;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+
+    .btn-green { background-color: #2e7d32; border: none; color: white; }
+    .btn-gray  { background-color: #555;    border: none; color: white; }
+    .btn-yellow{ background-color: #ffc107; border: none; color: black; }
+    .btn-red   { background-color: #c62828; border: none; color: white; }
+    .btn-black { background-color: #111; border: none; color: white; }
+
+    .center-buttons {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 10px;
+      gap: 10px;
+    }
+    
+    .center-buttons .btn {
+      width: 220px;
+      font-weight: bold;
+    }
+    
+    .score-panel {
+      margin-top: 1.5rem;
+      background-color: #000;
+      border: 1px solid #555;
+      border-radius: 12px;
+      padding: 0.8rem;
+    }
+
+    .score-label {
+      color: red;
+      font-weight: bold;
+    }
+
+    .score-value {
+      text-align: right;
+      color: white;
+    }
+
+    .score-box {
+      margin-top: 1rem;
+      background-color: rgba(255, 255, 255, 0); /* fully transparent */
+      border-radius: 10px;
+      padding: 10px;
+      color: white;
+      font-weight: bold;
+    }
+    
+
+    .subject-buttons .btn {
+      margin: 0.3rem;
+      font-weight: bold;
+    }
+
+    .stat-block {
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+
+    #feedback {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-top: 10px;
+    }
+    
+    #timer {
+      font-size: 1.5rem;
+      font-weight: bold;
+      color: yellow;
+      margin-bottom: 10px;
+    }
+    
+    #celebration {
+      display: none;
+      font-size: 24px;
+      color: green;
+      margin-top: 15px;
+      animation: fadeIn 2s infinite alternate;
+    }
+
+    @keyframes pop {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.2); }
+    }
+
+    @media screen and (max-width: 600px) {
+      .quiz-container {
+        margin: 10px;
+        padding: 1rem;
+      }
+
+      #questionBox {
+        background-color: rgba(255, 255, 255, 0.8); /* White with 80% opacity */
+        border-radius: 12px;
+        padding: 10px 20px;
+        text-align: center;
+        font-size: 2em;
+        font-weight: bold;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.2);
+        display: inline-block;
+        margin: 10px auto;
+      }
+      
+      #questionText {
+        text-shadow: 2px 2px 4px rgba(0,0,0,0.5); /* subtle dark outline */
+        color: white;
+      }
+      
+      }
+
+
+      h1 {
+        font-size: 1.5rem;
+        
+        
+      }
+      
+      .operation-buttons-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-top: 20px;
+      }
+
+      .operation-button {
+        margin: 10px 0;
+        font-weight: bold;
+        width: 200px;
+        text-align: center;
+      }
+
+      /* Fade-in animation */
+        .fade-in {
+        animation: fadeIn 1.5s ease-in;
+      }
+
+      @keyframes fadeIn {
+         from { opacity: 0; transform: translateY(20px); }
+         to { opacity: 1; transform: translateY(0); }
+       }
+
+       .center-buttons {
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         margin-top: 10px;
+         gap: 10px;
+         animation: fadeIn 1.2s ease-in;
+       }
+
+       .center-buttons .btn {
+         width: 220px;
+         font-weight: bold;
+       }
+       
+       #answer {
+        z-index: 10;
+        position: relative;
+      }
+      
+  .operation-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px;
+  }
+
+  .operation-button {
+    font-size: 80px;
+    font-weight: bold;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 10px;
+  }
+
+  .operation-button.plus {
+    color: red;
+  }
+
+  .operation-button.minus {
+    color: cyan;
+  }
+
+  .operation-button.times {
+    color: gold;
+  }
+
+  .operation-button.divide {
+    color: green;
+  }
+
+  .operation-button:hover {
+    transform: scale(1.2);
+    transition: 0.2s ease;
+    background-color: rgba(255, 255, 255, 0.2);
+  }
+
+  .operation-button:hover {
+    background-color: rgba(21, 19, 20, 0.55); /* Optional hover effect */
+  }
+  
+  .custom-title {
+     font-size: 50px; /* or 2rem, or whatever size you prefer */
+  }
+    
+    }
+  </style>
+</head>
+<body>
+<div class="quiz-container">
+    <h2 class="fw-bold text-danger">ARITHMETIC FLASH CARDS QUIZ</h2>
+    <div class="quiz-container text-center p-3">
+        PLEASE CHOOSE 
+        <span class="border border-primary text-primary px-2 py-1 rounded d-inline-block mx-1 fw-semibold">
+            RANDOM MODE
+        </span>
+        /
+        <span class="border border-success text-success px-2 py-1 rounded d-inline-block mx-1 fw-semibold">
+            IN-ORDER
+        </span>
+    </h3>
+    <div id="timer">Time: 00:00</div>
+    <div id="question" style="font-size: 110px;" class="text-white fw-bold"></div>
+</div>
+
+    
+  <input id="answer" class="form-control mb-3" type="number" placeholder="Your Answer">
+  <div id="feedback"></div>
+    
+    <div class="quiz-buttons fade-in">
+      <button class="btn btn-warning btn-sm" onclick="resetAllScores()">Reset Scores</button>
+      <button class="btn btn-primary btn-sm" onclick="setMode('random')">RANDOM</button>
+      <button class="btn btn-primary btn-sm" onclick="setMode('inOrder')">IN-ORDER</button>
+    </div>
+    
+    <div id="operationButtons" class="operation-row">
+        <button class="operation-button plus" onclick="startOperation('addition')">+</button>
+        <button class="operation-button minus" onclick="startOperation('subtraction')">−</button>
+        <button class="operation-button times" onclick="startOperation('multiplication')">×</button>
+        <button class="operation-button divide" onclick="startOperation('division')">÷</button>
+    </div>
+    
+    <div class="quiz-buttons">
+      <button class="btn btn-success btn-sm" onclick="submitAnswer()">Submit</button>
+      <button class="btn btn-secondary btn-sm" onclick="nextQuestion()">Pass</button>
+      <button class="btn btn-danger btn-sm" onclick="finishEarly()">Finish Early</button>
+      <button class="btn btn-dark btn-sm" onclick="exitApp()">Exit</button>
+    </div>
+  
+    
+    <div class="mt-3" style="color: red; font-weight: bold; font-size: 18px;">
+        <div id="score">Score: 0</div>
+        <div id="progress">Progress: 0/800 (0%)</div>
+    </div>
+    
+    <div style="background-color: rgba(21, 19, 20, 0.55); font-weight: bold; font-size: 25px; color: #252b2e;">
+        <div style="color: #00aaff;">ADDITION <span id="additionScore">00/200</span></div>
+        <div style="color: #00aaff;">SUBTRACTION <span id="subtractionScore">00/200</span></div>
+        <div style="color: #00aaff;">MULTIPLICATION <span id="multiplicationScore">00/200</span></div>
+        <div style="color: #00aaff;">DIVISION <span id="divisionScore">00/200</span></div>
+    </div>
+    
+</div>
+
+<div id="celebration">🎉 Congratulations! 🎉</div>
+
+<script>
+    let currentMode = 'random';
+    let currentOperation = '';
+    let currentQuestionIndex = 0;
+    let inOrderQuestions = [];
+    let correctAnswer = 0;
+    let correct = 0;
+    let attempted = 0;
+  
+    let timerInterval;
+    let timeLeft = 10;
+  
+    function startTimer() {
+  clearInterval(timerInterval);
+  timeLeft = 20;
+  const timerElement = document.getElementById('timer');
+  timerElement.textContent = `Time: ${timeLeft}s`;
+  timerElement.style.color = 'white'; // Reset to default color
+
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    timerElement.textContent = `Time: ${timeLeft}s`;
+
+    // Change color as timer runs down
+    if (timeLeft === 5) {
+      timerElement.style.color = 'red';
+    } else if (timeLeft < 10) {
+      timerElement.style.color = 'RED';
+    }
+
+    // Handle time up
+    if (timeLeft <= 0) {
+      clearInterval(timerInterval);
+      timerElement.textContent = `Time: 0s`;
+      document.getElementById('feedback').textContent = `⏰ Time's up! The correct answer was ${correctAnswer}.`;
+      document.getElementById('feedback').style.color = 'cyan';
+      updateSubjectScore(currentOperation, 0);
+      attempted++;
+      updateProgress();
+      setTimeout(() => nextQuestion(), 1000);
+    }
+  }, 1000);
+}
+
+  
+    function setMode(mode) {
+      currentMode = mode;
+      document.querySelectorAll('.operation-button').forEach(btn => btn.style.display = 'block');
+    }
+  
+    function startOperation(operation) {
+      currentOperation = operation;
+      currentQuestionIndex = 0;
+      document.querySelectorAll('.operation-button').forEach(btn => btn.style.display = 'none');
+      if (currentMode === 'inOrder') {
+        inOrderQuestions = generateOrderedQuestions(operation);
+      }
+      nextQuestion();
+    }
+  
+    function generateOrderedQuestions(operation) {
+      let questions = [];
+      for (let i = 1; i <= 12; i++) {
+        for (let j = 1; j <= 12; j++) {
+          if (operation === 'addition') {
+            questions.push({ a: i, b: j, op: '+' });
+          } else if (operation === 'subtraction') {
+            if (i >= j) questions.push({ a: i, b: j, op: '-' });
+          } else if (operation === 'multiplication') {
+            questions.push({ a: i, b: j, op: '×' });
+          } else if (operation === 'division') {
+            questions.push({ a: i * j, b: i, op: '÷' });
+          }
+        }
+      }
+      return questions;
+    }
+    
+    function loadScoresFromStorage() {
+  const subjects = ['Addition', 'Subtraction', 'Multiplication', 'Division'];
+  subjects.forEach(subject => {
+    const correct = parseInt(localStorage.getItem(`${subject}-correct`)) || 0;
+    document.getElementById(`${subject.toLowerCase()}Score`).textContent = `${correct.toString().padStart(2, '0')}/200`;
+  });
+}
+
+window.onload = loadScoresFromStorage;
+
+    function nextQuestion() {
+      clearInterval(timerInterval);
+      let question;
+      if (currentMode === 'inOrder') {
+        if (currentQuestionIndex >= inOrderQuestions.length) {
+          currentQuestionIndex = 0; // Loop back to start
+        }
+         question = inOrderQuestions[currentQuestionIndex];
+         currentQuestionIndex++;
+      } else {
+        let a = Math.floor(Math.random() * 12) + 1;
+        let b = Math.floor(Math.random() * 12) + 1;
+        let op;
+        switch (currentOperation) {
+          case 'addition': op = '+'; break;
+          case 'subtraction':
+            if (a < b) [a, b] = [b, a];
+            op = '-';
+            break;
+          case 'multiplication': op = '×'; break;
+          case 'division': a = a * b; op = '÷'; break;
+        }
+        question = { a, b, op };
+      }
+      
+    
+     
+      document.getElementById('question').innerText = `${question.a} ${question.op} ${question.b}`;
+      document.getElementById('answer').value = '';
+      switch (question.op) {
+        case '+': correctAnswer = question.a + question.b; break;
+        case '-': correctAnswer = question.a - question.b; break;
+        case '×': correctAnswer = question.a * question.b; break;
+        case '÷': correctAnswer = question.a / question.b; break;
+      }
+      startTimer(); // <-- Start the timer on each question
+    }
+    
+       // your existing logic...
+
+  // Re-enable input and refocus
+  document.getElementById('answer').disabled = false;
+  document.getElementById('answer').value = '';
+  document.getElementById('answer').focus(); // this helps trigger the number pad to reappear
+
+  // Re-enable buttons
+  document.querySelectorAll('.btn-operation, #submitBtn, #passBtn, #finishBtn').forEach(btn => {
+    btn.disabled = false;
+  });
+
+  // Clear feedback
+  document.getElementById('feedback').textContent = '';
+  
+    function submitAnswer() {
+      const input = document.getElementById('answer');
+      const feedback = document.getElementById('feedback');
+      let val = parseFloat(input.value.trim());
+      if (!isNaN(val)) {
+        clearInterval(timerInterval);
+        attempted++;
+        if (Math.abs(val - correctAnswer) < 0.01) {
+          correct++;
+          feedback.textContent = "✅ Correct!";
+          feedback.style.color = "#90EE90";
+          updateSubjectScore(currentOperation, 1);
+        } else {
+          feedback.textContent = `❌ Wrong! The correct answer was ${correctAnswer}.`;
+          feedback.style.color = "red";
+          updateSubjectScore(currentOperation, 0);
+        }
+        updateProgress();
+        nextQuestion();
+      } else {
+        input.value = '';
+        input.placeholder = "Enter a number";
+        feedback.textContent = '';
+      }
+    }
+  
+    function updateSubjectScore(subject, isCorrect) {
+      const key = subject.charAt(0).toUpperCase() + subject.slice(1);
+      let correct = parseInt(localStorage.getItem(`${key}-correct`)) || 0;
+      let attempted = parseInt(localStorage.getItem(`${key}-attempted`)) || 0;
+      attempted++;
+      if (isCorrect) correct++;
+      localStorage.setItem(`${key}-correct`, correct);
+      localStorage.setItem(`${key}-attempted`, attempted);
+      const scoreText = `${correct.toString().padStart(2, '0')}/200`;
+      document.getElementById(`${key.toLowerCase()}Score`).textContent = scoreText;
+    }
+  
+    function updateProgress() {
+      document.getElementById("score").textContent = `Score: ${correct}`;
+      document.getElementById("progress").textContent = `Progress: ${attempted}/200 (${Math.floor((attempted / 200) * 100)}%)`;
+    }
+  
+    function resetAllScores() {
+      const subjects = ['Addition', 'Subtraction', 'Multiplication', 'Division'];
+      subjects.forEach(subject => {
+        localStorage.removeItem(`${subject}-correct`);
+        localStorage.removeItem(`${subject}-attempted`);
+        document.getElementById(`${subject.toLowerCase()}Score`).textContent = '00/200';
+      });
+      correct = 0;
+      attempted = 0;
+      updateProgress();
+    }
+  
+    function finishEarly() {
+  clearInterval(timerInterval);
+  document.getElementById('question').textContent = 'Finished!';
+  document.getElementById('answer').disabled = true;
+  document.getElementById('feedback').textContent = '';
+
+  // Only disable specific buttons, not the mode toggle (Random/In Order)
+  document.querySelectorAll('.btn-operation, #submitBtn, #passBtn, #finishBtn').forEach(btn => {
+    btn.disabled = true;
+  });
+}
+
+  
+    function enableQuizControls() {
+      document.getElementById('answer').disabled = false;
+      document.querySelectorAll('.btn-operation, #submitBtn, #passBtn, #finishBtn').forEach(btn => {
+       btn.disabled = false;
+      });
+    }
+
+  
+    function exitApp() {
+      if (typeof AndroidInterface !== "undefined" && AndroidInterface.exitApp) {
+        AndroidInterface.exitApp();
+      } else {
+        alert("Exit not supported.");
+      }
+    }
+  
+    window.onload = () => {
+      const subjects = ['Addition', 'Subtraction', 'Multiplication', 'Division'];
+      subjects.forEach(subject => {
+        const correct = parseInt(localStorage.getItem(`${subject}-correct`)) || 0;
+        document.getElementById(`${subject.toLowerCase()}Score`).textContent = `${correct.toString().padStart(2, '0')}/200`;
+      });
+      document.getElementById('answer').addEventListener('keydown', e => {
+        if (e.key === 'Enter') submitAnswer();
+      });
+      
+      
+    };
+</script>
+</body>
+</html>
